@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courtesy Heads-Up: Slay the Workday!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --yellow: #FFD600;
+            --pink: #FF3DBC;
+            --purple: #7000FF;
+            --green: #00E676;
+            --cyan: #00E5FF;
+            --dark: #121212;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--cyan);
+            background-image: 
+                radial-gradient(var(--dark) 1px, transparent 1px),
+                radial-gradient(var(--dark) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Container Utama */
+        #app {
+            width: 100%;
+            max-width: 480px;
+            background: var(--white);
+            border: 4px solid var(--dark);
+            box-shadow: 12px 12px 0px var(--dark);
+            border-radius: 0px; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 650px;
+        }
+
+        /* Progress Bar */
+        #progress-container {
+            height: 12px;
+            background: var(--dark);
+            width: 100%;
+        }
+        #progress-bar {
+            height: 100%;
+            background: var(--yellow);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .screen {
+            display: none;
+            padding: 25px;
+            flex-direction: column;
+            flex-grow: 1;
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .screen.active { display: flex; }
+
+        @keyframes slideIn {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Typography */
+        h1 { font-weight: 800; font-size: 24px; line-height: 1.2; margin-bottom: 15px; text-transform: uppercase; }
+        p { font-size: 14px; line-height: 1.5; color: var(--dark); margin-bottom: 20px; }
+
+        /* Form Styling */
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 800; font-size: 12px; margin-bottom: 5px; text-transform: uppercase; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid var(--dark);
+            box-shadow: 4px 4px 0px var(--dark);
+            font-weight: 600;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--dark); }
+
+        /* Buttons */
+        .btn {
+            background: var(--purple);
+            color: var(--white);
+            border: 3px solid var(--dark);
+            padding: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 6px 6px 0px var(--dark);
+            transition: 0.2s;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--dark); }
+        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--dark); }
+        .btn-option { background: var(--white); color: var(--dark); text-align: left; margin-bottom: 12px; padding: 12px; min-height: 60px; line-height: 1.3; text-transform: none; font-weight: 600; font-size: 13px; }
+        .btn-option:hover { background: var(--yellow); }
+
+        /* Character & Dialog Card */
+        .char-area {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            background: var(--pink);
+            border: 3px solid var(--dark);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .dialog-bubble {
+            background: var(--white);
+            border: 3px solid var(--dark);
+            padding: 12px;
+            border-radius: 15px 15px 15px 0px;
+            font-weight: 600;
+            font-size: 13px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+        }
+
+        /* Flash Card */
+        .card-scene {
+            perspective: 1000px;
+            height: 160px;
+            margin-bottom: 15px;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .card-inner.flipped { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            border: 4px solid var(--dark);
+            text-align: center;
+        }
+        .card-front { background: var(--yellow); }
+        .card-back { background: var(--green); transform: rotateY(180deg); color: var(--dark); }
+
+        /* HUD */
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5px 10px 5px;
+            border-bottom: 3px dashed var(--dark);
+            margin-bottom: 15px;
+        }
+        .hp-bar { display: flex; align-items: center; gap: 8px; }
+        .hp-label { font-weight: 800; font-size: 11px; text-transform: uppercase; color: var(--dark); }
+        .heart-container { display: flex; gap: 4px; }
+        .heart { font-size: 20px; filter: drop-shadow(2px 2px 0px var(--dark)); }
+
+        /* Modal Reasoning */
+        #reasoning-modal {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--white);
+            border: 4px solid var(--dark);
+            padding: 20px;
+            box-shadow: 8px 8px 0px var(--pink);
+            text-align: center;
+        }
+
+        .victory-ribbon {
+            background: var(--pink);
+            color: white;
+            padding: 10px;
+            transform: rotate(-2deg);
+            font-weight: 900;
+            margin: 20px 0;
+            border: 3px solid var(--dark);
+        }
+
+        .hint-text {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-top: 5px;
+            color: var(--purple);
+            text-align: center;
+        }
+
+        .click-hint {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            background: var(--dark);
+            color: var(--white);
+            padding: 4px 8px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="progress-container"><div id="progress-bar"></div></div>
+
+    <!-- SCREEN 1: LOGIN -->
+    <div id="screen-login" class="screen active">
+        <h1>✨ PROACTIVE<br>CHALLENGE v1.2</h1>
+        <p>Buktikan kamu bisa untuk menjadi lebih proaktif!</p>
+        
+        <div class="input-group">
+            <label>Nama Lengkap</label>
+            <input type="text" id="p-name" placeholder="Contoh: Agus Andi">
+        </div>
+        <div class="input-group">
+            <label>NIK / ID Karyawan</label>
+            <input type="text" id="p-nik" placeholder="8 Digit Angka">
+        </div>
+        <div class="input-group">
+            <label>Unit Bisnis</label>
+            <input type="text" id="p-unit" placeholder="Contoh: Marketing / Ops">
+        </div>
+        
+        <button class="btn" onclick="initGame()">MULAI PETUALANGAN ➔</button>
+        <div class="hint-text">No lag, just pro-level communication.</div>
+    </div>
+
+    <!-- SCREEN 2: STORY & GAMEPLAY -->
+    <div id="screen-game" class="screen">
+        <div class="hud">
+            <div id="display-user" style="font-weight: 800; font-size: 10px; text-transform: uppercase;">USER_01</div>
+            <div class="hp-bar">
+                <span class="hp-label">KESEMPATAN:</span>
+                <div class="heart-container" id="hp-container">
+                    <span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="char-area">
+            <div class="avatar-circle">👩‍💼</div>
+            <div class="dialog-bubble" id="scenario-msg" style="font-weight: 800;">
+                "Oke, ada situasi mendadak nih. Gimana cara kamu kasih tau rekan kerja?"
+            </div>
+        </div>
+
+        <div class="card-scene">
+            <div class="card-inner" id="flashcard" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div style="font-size: 30px; margin-bottom: 5px;">⚡</div>
+                    <h2 id="scenario-title" style="font-size: 18px; margin-bottom: 5px;">SKENARIO</h2>
+                    <div class="click-hint">Klik untuk balik kartu</div>
+                </div>
+                <div class="card-face card-back">
+                    <label style="color: var(--dark); font-size: 10px;">PROACTIVE SCRIPT HINT:</label>
+                    <p id="scenario-hint" style="font-weight: 700; margin: 0; font-size: 13px;"></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="options-box" style="display: flex; flex-direction: column;">
+            <!-- Options injected here -->
+        </div>
+        <div class="hint-text">Intip kunci jawaban di kartu sebelum memilih!</div>
+    </div>
+
+    <!-- SCREEN 3: ENDING -->
+    <div id="screen-result" class="screen">
+        <div id="result-visual" style="text-align: center; margin-top: 10px;">
+            <div id="final-emoji" style="font-size: 60px;">🏆</div>
+        </div>
+        <h1 id="result-header" style="text-align: center;">MISSION CLEAR!</h1>
+        <div id="result-body"></div>
+        
+        <div id="victory-badge" style="display: none;">
+            <div class="victory-ribbon" style="text-align: center;">CERTIFIED PROACTIVE COMMUNICATOR</div>
+            <p style="text-align: center; font-weight: 800; font-size: 13px;">"Sekarang, kamu sudah siap untuk melakukan post-test!"</p>
+        </div>
+
+        <button class="btn" onclick="location.reload()" style="background: var(--dark);">MAIN LAGI</button>
+    </div>
+
+    <!-- MODAL REASONING -->
+    <div id="reasoning-modal">
+        <div class="modal-content">
+            <h2 style="color: var(--pink); margin-bottom: 10px; font-size: 18px;">SALAH PILIH! 💀</h2>
+            <p id="reason-text" style="font-size: 13px;"></p>
+            <button class="btn" style="width: 100%;" onclick="closeModal()">SAYA PAHAM</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DATA PERMAINAN
+    const database = [
+        {
+            title: "Sistem Error",
+            scenario: "Laptop kamu mendadak 'Blue Screen' saat sedang menginput data prioritas tinggi.",
+            hint: "Berikan estimasi waktu perbaikan dan tawarkan solusi sementara.",
+            options: [
+                { text: "Duh laptop saya error nih, jadi telat ya inputnya. Sabar ya.", correct: false, reason: "Kalimat ini reaktif dan hanya berfokus pada masalah, bukan solusi." },
+                { text: "Izin update, laptop saya sedang kendala teknis. Estimasi perbaikan 30 menit. Saya akan update lagi segera.", correct: true }
+            ]
+        },
+        {
+            title: "Deadline Bentrok",
+            scenario: "Atasan kasih tugas baru yang harus selesai jam 5 sore, padahal tugas lama belum kelar.",
+            hint: "Konfirmasi prioritas agar ekspektasi semua pihak terjaga.",
+            options: [
+                { text: "Pak, tugas saya sudah banyak. Jangan ditambah lagi dong, pusing.", correct: false, reason: "Terlalu emosional dan tidak profesional dalam mengelola ekspektasi." },
+                { text: "Siap Pak. Mengingat ada tugas X yang juga selesai jam 5, mana yang perlu saya prioritaskan dulu?", correct: true }
+            ]
+        },
+        {
+            title: "Data Belum Siap",
+            scenario: "Meeting tinggal 5 menit lagi, tapi slide presentasi dari tim lain belum kamu terima.",
+            hint: "Informasikan status terkini sebelum ditanya saat meeting dimulai.",
+            options: [
+                { text: "Update: Slide masih diproses tim X. Akan segera saya tampilkan begitu diterima. Izin mulai dengan agenda lain dulu.", correct: true },
+                { text: "Maaf semuanya, slide-nya belum ada soalnya orang tim X belum kirim ke saya.", correct: false, reason: "Hanya menyalahkan orang lain tanpa memberikan alternatif alur meeting." }
+            ]
+        }
+    ];
+
+    let currentStep = 0;
+    let lives = 3;
+    let isFlipped = false;
+
+    // ═══════════════════════════════════════════
+    //  AUDIO SYSTEM — Fun Gamy BGM + SFX
+    //  BGM: ~128 BPM, C pentatonic melody (xylophone),
+    //  synth bass groove, kick+snare ringan, no chord pad
+    // ═══════════════════════════════════════════
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let bgmNodes = {};
+    let bgmRunning = false;
+
+    // ── Low-level helpers ──
+    function note(freq, t, dur, vol = 0.16) {
+        [freq, freq * 2.01].forEach((f, j) => {
+            const osc = audioCtx.createOscillator();
+            const env = audioCtx.createGain();
+            osc.type = j === 0 ? 'triangle' : 'sine';
+            osc.frequency.value = f;
+            const v = j === 0 ? vol : vol * 0.2;
+            env.gain.setValueAtTime(0, t);
+            env.gain.linearRampToValueAtTime(v, t + 0.012);
+            env.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.88);
+            osc.connect(env); env.connect(bgmNodes.master);
+            osc.start(t); osc.stop(t + dur + 0.05);
+        });
+    }
+    function bassNote(freq, t, dur, vol = 0.2) {
+        const osc = audioCtx.createOscillator();
+        const env = audioCtx.createGain();
+        const filt = audioCtx.createBiquadFilter();
+        osc.type = 'square'; osc.frequency.value = freq;
+        filt.type = 'lowpass'; filt.frequency.value = 300; filt.Q.value = 1.2;
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(vol, t + 0.02);
+        env.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.7);
+        osc.connect(filt); filt.connect(env); env.connect(bgmNodes.master);
+        osc.start(t); osc.stop(t + dur);
+    }
+    function kick(t) {
+        const osc = audioCtx.createOscillator();
+        const env = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(180, t);
+        osc.frequency.exponentialRampToValueAtTime(38, t + 0.07);
+        env.gain.setValueAtTime(0.4, t);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+        osc.connect(env); env.connect(bgmNodes.master);
+        osc.start(t); osc.stop(t + 0.18);
+    }
+    function snare(t) {
+        const sz = Math.floor(audioCtx.sampleRate * 0.1);
+        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < sz; i++) d[i] = (Math.random()*2-1)*(1-i/sz);
+        const src = audioCtx.createBufferSource();
+        const hpf = audioCtx.createBiquadFilter();
+        const env = audioCtx.createGain();
+        src.buffer = buf; hpf.type = 'highpass'; hpf.frequency.value = 2000;
+        env.gain.setValueAtTime(0.1, t);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+        src.connect(hpf); hpf.connect(env); env.connect(bgmNodes.master);
+        src.start(t);
+    }
+    function hihat(t, vol=0.035) {
+        const sz = Math.floor(audioCtx.sampleRate * 0.03);
+        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < sz; i++) d[i] = (Math.random()*2-1)*(1-i/sz);
+        const src = audioCtx.createBufferSource();
+        const hpf = audioCtx.createBiquadFilter();
+        const env = audioCtx.createGain();
+        src.buffer = buf; hpf.type = 'highpass'; hpf.frequency.value = 9000;
+        env.gain.setValueAtTime(vol, t);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+        src.connect(hpf); hpf.connect(env); env.connect(bgmNodes.master);
+        src.start(t);
+    }
+
+    function startBGM() {
+        if (bgmRunning) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        bgmRunning = true;
+
+        const master = audioCtx.createGain();
+        master.gain.value = 0.14;
+        master.connect(audioCtx.destination);
+        bgmNodes.master = master;
+        bgmNodes.intervals = [];
+
+        const BPM = 128, S = 60/BPM, BAR = S*4, LOOP = BAR*8;
+        const loopStart = audioCtx.currentTime + 0.05;
+
+        // C major pentatonic: C4 D4 E4 G4 A4 C5 D5 E5 G5 A5
+        const melSeq = [
+            // Bar 1 — bouncy hook
+            [523.25,0*S,S*.38],[659.25,.5*S,S*.38],[783.99,1*S,S*.45],
+            [659.25,1.5*S,S*.38],[523.25,2*S,S*.38],[587.33,2.5*S,S*.38],
+            [523.25,3*S,S*.7],
+            // Bar 2
+            [440,4*S,S*.35],[392,4.5*S,S*.35],[440,5*S,S*.55],
+            [523.25,5.75*S,S*.3],[587.33,6*S,S*.38],[659.25,6.5*S,S*.38],
+            [523.25,7*S,S*.8],
+            // Bar 3 — rising run
+            [329.63,8*S,S*.28],[392,8.38*S,S*.28],[440,8.75*S,S*.28],
+            [523.25,9*S,S*.28],[587.33,9.38*S,S*.28],[659.25,9.75*S,S*.28],
+            [783.99,10*S,S*.5],[659.25,11*S,S*.38],[523.25,11.5*S,S*.7],
+            // Bar 4 — pocket groove
+            [440,12*S,S*.35],[523.25,12.5*S,S*.35],[587.33,13*S,S*.5],
+            [523.25,13.75*S,S*.22],[440,14*S,S*.35],[392,14.5*S,S*.35],[329.63,15*S,S*.9],
+            // Bar 5 — variation
+            [523.25,16*S,S*.38],[659.25,16.5*S,S*.38],[783.99,17*S,S*.5],
+            [880,17.75*S,S*.22],[783.99,18*S,S*.38],[659.25,18.5*S,S*.38],[523.25,19*S,S*.9],
+            // Bar 6 — playful skip
+            [392,20*S,S*.28],[523.25,20.38*S,S*.28],[392,20.75*S,S*.28],
+            [440,21*S,S*.28],[523.25,21.5*S,S*.5],[587.33,22*S,S*.35],
+            [659.25,22.5*S,S*.35],[523.25,23*S,S*.8],
+            // Bar 7 — build
+            [261.63,24*S,S*.28],[329.63,24.38*S,S*.28],[392,24.75*S,S*.28],
+            [440,25*S,S*.28],[523.25,25.38*S,S*.28],[659.25,25.75*S,S*.28],
+            [783.99,26*S,S*.28],[880,26.38*S,S*.28],[1046.5,26.75*S,S*.35],
+            [880,27*S,S*.35],[659.25,27.5*S,S*.35],[523.25,28*S,S*.9],
+            // Bar 8 — resolve
+            [440,29*S,S*.38],[523.25,29.5*S,S*.38],[659.25,30*S,S*.55],[523.25,31*S,S*1.1],
+        ];
+        const bassSeq = [
+            [65.41,0*S,S*.35],[65.41,1*S,S*.2],[65.41,1.5*S,S*.2],[65.41,2*S,S*.35],[65.41,3*S,S*.35],
+            [55,4*S,S*.35],[55,5*S,S*.2],[55,5.5*S,S*.2],[55,6*S,S*.35],[55,7*S,S*.35],
+            [87.31,8*S,S*.35],[87.31,9*S,S*.2],[87.31,9.5*S,S*.2],[87.31,10*S,S*.35],[87.31,11*S,S*.35],
+            [73.42,12*S,S*.35],[73.42,13*S,S*.2],[73.42,13.5*S,S*.2],[73.42,14*S,S*.35],[73.42,15*S,S*.35],
+            [65.41,16*S,S*.35],[65.41,17*S,S*.35],[65.41,18*S,S*.35],[65.41,19*S,S*.35],
+            [55,20*S,S*.35],[55,21*S,S*.35],[55,22*S,S*.35],[55,23*S,S*.35],
+            [87.31,24*S,S*.35],[87.31,25*S,S*.35],[87.31,26*S,S*.35],[87.31,27*S,S*.35],
+            [65.41,28*S,S*.35],[65.41,29*S,S*.35],[65.41,30*S,S*.35],[65.41,31*S,S*.85],
+        ];
+        // Drums
+        const H = S/2;
+        const drumEvts = [];
+        for (let bar=0; bar<8; bar++) {
+            const t = bar*BAR;
+            for (let st=0; st<8; st++) {
+                const at = t + st*H;
+                drumEvts.push({type:'hihat', t:at, vol: st%2===0?0.04:0.025});
+                if (st===0) drumEvts.push({type:'kick', t:at});
+                if (st===4) drumEvts.push({type:'kick', t:at});
+                if (st===2) drumEvts.push({type:'snare', t:at});
+                if (st===6) drumEvts.push({type:'snare', t:at});
+                if ((bar===3||bar===7) && st===3) drumEvts.push({type:'kick', t:at});
+            }
+        }
+
+        function scheduleLoop(startT) {
+            melSeq.forEach(([f,o,d]) => note(f, startT+o, d, 0.16));
+            bassSeq.forEach(([f,o,d]) => bassNote(f, startT+o, d, 0.18));
+            drumEvts.forEach(({type,t,vol}) => {
+                const at = startT+t;
+                if (type==='kick') kick(at);
+                else if (type==='snare') snare(at);
+                else hihat(at, vol);
+            });
+        }
+
+        scheduleLoop(loopStart);
+        let loopCount = 1;
+        const id = setInterval(() => {
+            if (!bgmRunning) { clearInterval(id); return; }
+            const next = loopStart + loopCount * LOOP;
+            if (next - audioCtx.currentTime < 2.5) {
+                scheduleLoop(next);
+                loopCount++;
+            }
+        }, 600);
+        bgmNodes.intervals.push(id);
+    }
+
+    function stopBGM() {
+        bgmRunning = false;
+        if (bgmNodes.intervals) bgmNodes.intervals.forEach(id => clearInterval(id));
+        if (bgmNodes.master) {
+            bgmNodes.master.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+        }
+        bgmNodes = {};
+    }
+
+    // SFX helpers (tetap ada untuk interaksi)
+    function playSFX(freq, type, duration, vol = 0.1) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playWinSound() {
+        // 5-note victory fanfare
+        const fanfare = [[523.25,0],[659.25,120],[783.99,240],[1046.5,360],[1318.5,480]];
+        fanfare.forEach(([f,delay]) => setTimeout(() => playSFX(f,'sine',0.4,0.18), delay));
+    }
+
+    function playFailSound() {
+        // Descending buzz
+        [220,175,140].forEach((f,i) => setTimeout(() => playSFX(f,'sawtooth',0.25,0.18), i*100));
+    }
+
+    // GAME LOGIC
+    function flipCard() {
+        const card = document.getElementById('flashcard');
+        isFlipped = !isFlipped;
+        card.classList.toggle('flipped', isFlipped);
+        playSFX(600, 'triangle', 0.1);
+    }
+
+    function initGame() {
+        const name = document.getElementById('p-name').value;
+        const nik = document.getElementById('p-nik').value;
+        const unit = document.getElementById('p-unit').value;
+        if(!name || !nik || !unit) {
+            playFailSound();
+            alert("Isi semua data kamu dulu ya, Slay!");
+            return;
+        }
+        
+        playSFX(800, 'sine', 0.2);
+        document.getElementById('display-user').innerText = `${name} | ${unit}`;
+        document.getElementById('screen-login').classList.remove('active');
+        document.getElementById('screen-game').classList.add('active');
+        loadStep();
+        startBGM(); // Start BGM setelah user gesture
+    }
+
+    function loadStep() {
+        const data = database[currentStep];
+        const progress = ((currentStep) / database.length) * 100;
+        document.getElementById('progress-bar').style.width = progress + "%";
+        
+        isFlipped = false;
+        document.getElementById('flashcard').classList.remove('flipped');
+        
+        document.getElementById('scenario-title').innerText = data.title;
+        document.getElementById('scenario-msg').innerText = data.scenario;
+        document.getElementById('scenario-hint').innerText = data.hint;
+
+        const box = document.getElementById('options-box');
+        box.innerHTML = '';
+        data.options.sort(() => Math.random() - 0.5).forEach(opt => {
+            const b = document.createElement('button');
+            b.className = 'btn btn-option';
+            b.innerText = opt.text;
+            b.onclick = () => handleChoice(opt);
+            box.appendChild(b);
+        });
+    }
+
+    function handleChoice(opt) {
+        if(opt.correct) {
+            playSFX(1000, 'sine', 0.2);
+            currentStep++;
+            if(currentStep >= database.length) {
+                endGame(true);
+            } else {
+                loadStep();
+            }
+        } else {
+            lives--;
+            updateHP();
+            playFailSound();
+            showReasoning(opt.reason);
+        }
+    }
+
+    function updateHP() {
+        const container = document.getElementById('hp-container');
+        container.innerHTML = '';
+        for(let i=0; i<3; i++) {
+            const s = document.createElement('span');
+            s.className = 'heart';
+            s.innerText = i < lives ? '❤️' : '💀';
+            container.appendChild(s);
+        }
+    }
+
+    function showReasoning(msg) {
+        document.getElementById('reason-text').innerText = msg;
+        document.getElementById('reasoning-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('reasoning-modal').style.display = 'none';
+        if(lives <= 0) endGame(false);
+    }
+
+    function endGame(isWin) {
+        stopBGM();
+        document.getElementById('screen-game').classList.remove('active');
+        document.getElementById('screen-result').classList.add('active');
+        document.getElementById('progress-bar').style.width = "100%";
+
+        const header = document.getElementById('result-header');
+        const body = document.getElementById('result-body');
+        const emoji = document.getElementById('final-emoji');
+        const badge = document.getElementById('victory-badge');
+
+        if(isWin) {
+            header.innerText = "YOU'RE A LEGEND!";
+            emoji.innerText = "👑";
+            body.innerHTML = `<p style="text-align: center; font-size: 13px;">Gokil! Kamu berhasil menyelesaikan semua tantangan dengan gaya proaktif. Komunikasi kamu bener-bener 10/10.</p>`;
+            badge.style.display = 'block';
+            playWinSound();
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        } else {
+            header.innerText = "GAME OVER";
+            emoji.innerText = "🤡";
+            body.innerHTML = `<p style="text-align: center; font-size: 13px;">Waduh, sepertinya kamu harus lebih banyak latihan kasih kabar duluan nih. Jangan tunggu ditanya baru jawab ya!</p>`;
+            playFailSound();
+        }
+    }
+
+    // Mulai BGM saat game screen aktif (trigger dari initGame)
+    // BGM dimulai di initGame() setelah user klik — user gesture agar browser izinkan audio
+
+</script>
+</body>
+</html>
