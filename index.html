@@ -3,166 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Courtesy Heads-Up: Slay the Workday!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Proactive Pulse: The Heads-Up Challenge</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --yellow: #FFD600;
-            --pink: #FF3DBC;
-            --purple: #7000FF;
-            --green: #00E676;
-            --cyan: #00E5FF;
-            --dark: #121212;
-            --white: #FFFFFF;
+            --bg-color: #ffde00; /* Yellow Comic */
+            --primary: #f93822;  /* Red Comic */
+            --secondary: #00a8e8; /* Blue Comic */
+            --accent: #ffffff;
+            --text: #000000;
+            --danger: #ff0000;
+            --success: #2ecc71;
+            --border-thick: 4px solid #000000;
+            --shadow-solid: 8px 8px 0px #000000;
         }
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Arial Black', 'Segoe UI Bold', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--cyan);
-            background-image: 
-                radial-gradient(var(--dark) 1px, transparent 1px),
-                radial-gradient(var(--dark) 1px, transparent 1px);
-            background-size: 40px 40px;
-            background-position: 0 0, 20px 20px;
-            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text);
             display: flex;
             justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            padding: 20px;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: radial-gradient(#000000 10%, transparent 10%);
+            background-size: 20px 20px;
+            background-attachment: fixed;
+            opacity: 0.95;
         }
 
-        /* Container Utama */
-        #app {
+        #game-container {
             width: 100%;
-            max-width: 480px;
-            background: var(--white);
-            border: 4px solid var(--dark);
-            box-shadow: 12px 12px 0px var(--dark);
-            border-radius: 0px; 
-            position: relative;
+            max-width: 500px;
+            min-height: 100vh;
+            background: #ffffff;
+            border-left: var(--border-thick);
+            border-right: var(--border-thick);
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            min-height: 650px;
-        }
-
-        /* Progress Bar */
-        #progress-container {
-            height: 12px;
-            background: var(--dark);
-            width: 100%;
-        }
-        #progress-bar {
-            height: 100%;
-            background: var(--yellow);
-            width: 0%;
-            transition: width 0.3s ease;
+            position: relative;
+            box-shadow: 20px 0 50px rgba(0,0,0,0.2);
         }
 
         .screen {
             display: none;
-            padding: 25px;
+            animation: comicBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             flex-direction: column;
-            flex-grow: 1;
-            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            gap: 20px;
+            padding-bottom: 80px;
         }
 
-        .screen.active { display: flex; }
-
-        @keyframes slideIn {
-            from { transform: translateX(50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .screen.active {
+            display: flex;
         }
 
-        /* Typography */
-        h1 { font-weight: 800; font-size: 24px; line-height: 1.2; margin-bottom: 15px; text-transform: uppercase; }
-        p { font-size: 14px; line-height: 1.5; color: var(--dark); margin-bottom: 20px; }
-
-        /* Form Styling */
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 800; font-size: 12px; margin-bottom: 5px; text-transform: uppercase; }
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 3px solid var(--dark);
-            box-shadow: 4px 4px 0px var(--dark);
-            font-weight: 600;
-            outline: none;
-            transition: 0.2s;
+        @keyframes comicBounce {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
-        input:focus { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--dark); }
 
-        /* Buttons */
-        .btn {
-            background: var(--purple);
-            color: var(--white);
-            border: 3px solid var(--dark);
-            padding: 15px;
-            font-weight: 800;
+        h1 {
+            font-size: 3rem;
             text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 6px 6px 0px var(--dark);
+            line-height: 0.9;
+            margin: 0;
+            color: var(--primary);
+            text-align: center;
+            -webkit-text-stroke: 2px #000;
+            filter: drop-shadow(4px 4px 0px #000);
+            transform: rotate(-2deg);
+        }
+
+        .mission-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            background: #fff;
+            padding: 20px;
+            border: var(--border-thick);
+            box-shadow: 6px 6px 0px var(--secondary);
+            border-radius: 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 900;
+            color: #000;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        input {
+            background: #fff;
+            border: var(--border-thick);
+            padding: 15px;
+            font-size: 1rem;
             transition: 0.2s;
+            font-weight: bold;
+        }
+
+        input:focus {
+            outline: none;
+            background: #f0f0f0;
+            box-shadow: 4px 4px 0px var(--primary);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: var(--border-thick);
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.1s;
+            text-transform: uppercase;
+            box-shadow: var(--shadow-solid);
             margin-top: 10px;
-            font-size: 14px;
         }
-        .btn:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px var(--dark); }
-        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--dark); }
-        .btn-option { background: var(--white); color: var(--dark); text-align: left; margin-bottom: 12px; padding: 12px; min-height: 60px; line-height: 1.3; text-transform: none; font-weight: 600; font-size: 13px; }
-        .btn-option:hover { background: var(--yellow); }
 
-        /* Character & Dialog Card */
-        .char-area {
-            display: flex;
-            align-items: flex-end;
-            margin-bottom: 15px;
-            gap: 10px;
+        .btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px #000;
         }
-        .avatar-circle {
-            width: 50px;
-            height: 50px;
-            background: var(--pink);
-            border: 3px solid var(--dark);
-            border-radius: 50%;
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .stats-bar {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-        .dialog-bubble {
-            background: var(--white);
-            border: 3px solid var(--dark);
-            padding: 12px;
-            border-radius: 15px 15px 15px 0px;
-            font-weight: 600;
-            font-size: 13px;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            padding: 10px 15px;
+            background: #000;
+            color: #fff;
+            margin-bottom: 20px;
+            transform: skew(-5deg);
         }
 
-        /* Flash Card */
-        .card-scene {
-            perspective: 1000px;
-            height: 160px;
-            margin-bottom: 15px;
+        .hearts {
+            font-size: 1.5rem;
+            display: flex;
+            gap: 5px;
         }
-        .card-inner {
+
+        .card-container {
+            perspective: 1000px;
+            height: 320px;
+            width: 100%;
+        }
+
+        .card {
             position: relative;
             width: 100%;
             height: 100%;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
             cursor: pointer;
         }
-        .card-inner.flipped { transform: rotateY(180deg); }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
         .card-face {
             position: absolute;
             width: 100%;
@@ -172,525 +189,515 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 15px;
-            border: 4px solid var(--dark);
+            padding: 25px;
             text-align: center;
+            border: var(--border-thick);
+            box-shadow: 10px 10px 0px rgba(0,0,0,1);
         }
-        .card-front { background: var(--yellow); }
-        .card-back { background: var(--green); transform: rotateY(180deg); color: var(--dark); }
 
-        /* HUD */
-        .hud {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 5px 10px 5px;
-            border-bottom: 3px dashed var(--dark);
-            margin-bottom: 15px;
+        .card-front {
+            background: #fff;
         }
-        .hp-bar { display: flex; align-items: center; gap: 8px; }
-        .hp-label { font-weight: 800; font-size: 11px; text-transform: uppercase; color: var(--dark); }
-        .heart-container { display: flex; gap: 4px; }
-        .heart { font-size: 20px; filter: drop-shadow(2px 2px 0px var(--dark)); }
 
-        /* Modal Reasoning */
-        #reasoning-modal {
+        .card-back {
+            background: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .scenario-tag {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            top: -15px;
+            left: 20px;
+            background: #000;
+            color: #fff;
+            padding: 5px 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transform: rotate(-3deg);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .option-btn {
+            background: #fff;
+            border: var(--border-thick);
+            padding: 15px;
+            color: #000;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
+        }
+
+        .option-btn:hover {
+            transform: translateX(5px);
+            background: #fffbd6;
+            border-color: var(--primary);
+        }
+
+        .option-label {
+            background: #000;
+            color: #fff;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,222,0,0.9);
+            z-index: 100;
             display: none;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
-            padding: 20px;
-        }
-        .modal-content {
-            background: var(--white);
-            border: 4px solid var(--dark);
-            padding: 20px;
-            box-shadow: 8px 8px 0px var(--pink);
+            padding: 40px;
             text-align: center;
         }
 
-        .victory-ribbon {
-            background: var(--pink);
-            color: white;
-            padding: 10px;
-            transform: rotate(-2deg);
-            font-weight: 900;
-            margin: 20px 0;
-            border: 3px solid var(--dark);
+        .feedback-content {
+            background: #fff;
+            padding: 30px;
+            border: var(--border-thick);
+            box-shadow: 12px 12px 0px #000;
+            max-width: 400px;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .hint-text {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 800;
-            margin-top: 5px;
-            color: var(--purple);
+        @keyframes popIn {
+            from { transform: scale(0.5) rotate(10deg); opacity: 0; }
+            to { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #000;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .win-card {
+            border: var(--border-thick);
+            padding: 40px;
+            background: #fff;
+            box-shadow: 15px 15px 0px var(--success);
             text-align: center;
         }
 
-        .click-hint {
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            background: var(--dark);
-            color: var(--white);
-            padding: 4px 8px;
-            margin-top: 10px;
+        .boom-text {
+            color: var(--primary);
+            font-size: 4rem;
+            -webkit-text-stroke: 3px #000;
+            filter: drop-shadow(5px 5px 0px #000);
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            #game-container { border: none; }
+            h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
-<div id="app">
-    <div id="progress-container"><div id="progress-bar"></div></div>
+    <div id="game-container">
+        <!-- SCREEN 1: LOGIN -->
+        <div id="screen-login" class="screen active">
+            <div style="margin-top: 40px; position: relative;">
+                <div style="background: #000; color: #fff; padding: 5px 10px; width: fit-content; margin: 0 auto; transform: rotate(-5deg); font-size: 0.8rem;">EDISI TERBARU!</div>
+                <h1>PROACTIVE<br>PULSE!</h1>
+                <p style="text-align: center; font-weight: 900; margin-top: 10px;">The Heads-Up Mastery</p>
+            </div>
+            
+            <div class="input-group">
+                <label>Nama Lengkap</label>
+                <input type="text" id="user-name" placeholder="Masukkan nama Anda">
+            </div>
 
-    <!-- SCREEN 1: LOGIN -->
-    <div id="screen-login" class="screen active">
-        <h1>✨ PROACTIVE<br>CHALLENGE v1.2</h1>
-        <p>Buktikan kamu bisa untuk menjadi lebih proaktif!</p>
-        
-        <div class="input-group">
-            <label>Nama Lengkap</label>
-            <input type="text" id="p-name" placeholder="Contoh: Agus Andi">
-        </div>
-        <div class="input-group">
-            <label>NIK / ID Karyawan</label>
-            <input type="text" id="p-nik" placeholder="8 Digit Angka">
-        </div>
-        <div class="input-group">
-            <label>Unit Bisnis</label>
-            <input type="text" id="p-unit" placeholder="Contoh: Marketing / Ops">
-        </div>
-        
-        <button class="btn" onclick="initGame()">MULAI PETUALANGAN ➔</button>
-        <div class="hint-text">No lag, just pro-level communication.</div>
-    </div>
+            <div class="input-group">
+                <label>NIK</label>
+                <input type="text" id="user-nik" placeholder="Masukkan NIK Anda">
+            </div>
 
-    <!-- SCREEN 2: STORY & GAMEPLAY -->
-    <div id="screen-game" class="screen">
-        <div class="hud">
-            <div id="display-user" style="font-weight: 800; font-size: 10px; text-transform: uppercase;">USER_01</div>
-            <div class="hp-bar">
-                <span class="hp-label">KESEMPATAN:</span>
-                <div class="heart-container" id="hp-container">
-                    <span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span>
-                </div>
+            <button class="btn" onclick="goToMission()">GAS MULAI!</button>
+            
+            <div class="footer">
+                Education & Training Dept. © 2026
             </div>
         </div>
 
-        <div class="char-area">
-            <div class="avatar-circle">👩‍💼</div>
-            <div class="dialog-bubble" id="scenario-msg" style="font-weight: 800;">
-                "Oke, ada situasi mendadak nih. Gimana cara kamu kasih tau rekan kerja?"
+        <!-- SCREEN 2: MISSION -->
+        <div id="screen-mission" class="screen">
+            <div class="boom-text" style="text-align: center; transform: rotate(5deg);">MISI!</div>
+            
+            <div class="mission-text">
+                <p>Halo, <span id="display-name" style="color: var(--primary); font-weight: 900;">Peserta</span>!</p>
+                <p>Operasional sedang kacau! Tugas Anda adalah memberikan <strong>"Courtesy Heads-Up"</strong> secepat kilat sebelum masalah meledak!</p>
+                
+                <p><strong>PERATURAN:</strong></p>
+                <ul>
+                    <li>Balik kartu buat intip masalahnya.</li>
+                    <li>Pilih jawaban paling <strong>proaktif</strong> & <strong>solutif</strong>.</li>
+                    <li>Hati-hati! Anda punya 3 nyawa. Jika habis, game over!</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-secondary" onclick="startGame()">SAYA SIAP, HAJAR!</button>
+            
+            <div class="footer">
+                Education & Training Dept. © 2026
             </div>
         </div>
 
-        <div class="card-scene">
-            <div class="card-inner" id="flashcard" onclick="flipCard()">
-                <div class="card-face card-front">
-                    <div style="font-size: 30px; margin-bottom: 5px;">⚡</div>
-                    <h2 id="scenario-title" style="font-size: 18px; margin-bottom: 5px;">SKENARIO</h2>
-                    <div class="click-hint">Klik untuk balik kartu</div>
+        <!-- SCREEN 3: GAMEPLAY -->
+        <div id="screen-game" class="screen">
+            <div class="stats-bar">
+                <div id="lives-display" class="hearts">❤️❤️❤️</div>
+                <div id="progress-display" style="font-weight: 900;">PANEL 1/5</div>
+            </div>
+
+            <div class="card-container" onclick="flipCard()">
+                <div id="main-card" class="card">
+                    <div class="card-face card-front">
+                        <span class="scenario-tag">POW! MASALAH!</span>
+                        <h2 id="scenario-title" style="font-size: 1.5rem; text-transform: uppercase;">Koneksi Down</h2>
+                        <p id="scenario-desc" style="font-weight: bold; color: #555;">Jaringan kantor sedang bermasalah saat Anda harus mengirim laporan penting.</p>
+                        <p class="hint">KLIK UNTUK INTIP!</p>
+                    </div>
+                    <div class="card-face card-back">
+                        <span class="scenario-tag" style="background: var(--primary);">WHAT'S NEXT?</span>
+                        <p style="font-size: 1.2rem; font-weight: 900;">Apa script sakti yang akan Anda gunakan?</p>
+                        <p style="font-size: 0.8rem; font-style: italic;">(Klik lagi untuk tutup & pilih)</p>
+                    </div>
                 </div>
-                <div class="card-face card-back">
-                    <label style="color: var(--dark); font-size: 10px;">PROACTIVE SCRIPT HINT:</label>
-                    <p id="scenario-hint" style="font-weight: 700; margin: 0; font-size: 13px;"></p>
-                </div>
+            </div>
+
+            <div id="options-container" class="options-grid">
+                <!-- Options injected by JS -->
             </div>
         </div>
 
-        <div id="options-box" style="display: flex; flex-direction: column;">
-            <!-- Options injected here -->
-        </div>
-        <div class="hint-text">Intip kunci jawaban di kartu sebelum memilih!</div>
-    </div>
-
-    <!-- SCREEN 3: ENDING -->
-    <div id="screen-result" class="screen">
-        <div id="result-visual" style="text-align: center; margin-top: 10px;">
-            <div id="final-emoji" style="font-size: 60px;">🏆</div>
-        </div>
-        <h1 id="result-header" style="text-align: center;">MISSION CLEAR!</h1>
-        <div id="result-body"></div>
-        
-        <div id="victory-badge" style="display: none;">
-            <div class="victory-ribbon" style="text-align: center;">CERTIFIED PROACTIVE COMMUNICATOR</div>
-            <p style="text-align: center; font-weight: 800; font-size: 13px;">"Sekarang, kamu sudah siap untuk melakukan post-test!"</p>
+        <!-- SCREEN 4: SUCCESS -->
+        <div id="screen-win" class="screen">
+            <div class="win-card">
+                <div class="boom-text">KABOOM!</div>
+                <h1 style="font-size: 2rem;">BERHASIL!</h1>
+                <p style="font-size: 1.2rem; margin: 20px 0; font-weight: 900;">Luar biasa, <span id="winner-name"></span>!</p>
+                <p class="mission-text" style="box-shadow: 6px 6px 0px var(--success);">
+                    Refleks Heads-Up Anda sudah setingkat ahli!
+                    <br><br>
+                    <strong>"Sekarang, Anda sudah siap untuk melakukan post-test!"</strong>
+                </p>
+                <button class="btn" onclick="location.reload()">MAIN LAGI</button>
+            </div>
         </div>
 
-        <button class="btn" onclick="location.reload()" style="background: var(--dark);">MAIN LAGI</button>
-    </div>
-
-    <!-- MODAL REASONING -->
-    <div id="reasoning-modal">
-        <div class="modal-content">
-            <h2 style="color: var(--pink); margin-bottom: 10px; font-size: 18px;">SALAH PILIH! 💀</h2>
-            <p id="reason-text" style="font-size: 13px;"></p>
-            <button class="btn" style="width: 100%;" onclick="closeModal()">SAYA PAHAM</button>
+        <!-- SCREEN 5: GAME OVER -->
+        <div id="screen-lose" class="screen">
+            <div class="boom-text" style="color: #555;">OUCH!</div>
+            <h1>GAME OVER</h1>
+            <div class="mission-text" style="border-color: var(--danger); box-shadow: 6px 6px 0px #000;">
+                <p>Jangan menyerah! Pelajari script proaktif ini:</p>
+                <div id="reasoning-list" style="text-align: left; font-size: 0.9rem;">
+                    <!-- Reasonings -->
+                </div>
+            </div>
+            <button class="btn" onclick="location.reload()">COBA LAGI!</button>
         </div>
     </div>
-</div>
 
-<script>
-    // DATA PERMAINAN
-    const database = [
-        {
-            title: "Sistem Error",
-            scenario: "Laptop kamu mendadak 'Blue Screen' saat sedang menginput data prioritas tinggi.",
-            hint: "Berikan estimasi waktu perbaikan dan tawarkan solusi sementara.",
-            options: [
-                { text: "Duh laptop saya error nih, jadi telat ya inputnya. Sabar ya.", correct: false, reason: "Kalimat ini reaktif dan hanya berfokus pada masalah, bukan solusi." },
-                { text: "Izin update, laptop saya sedang kendala teknis. Estimasi perbaikan 30 menit. Saya akan update lagi segera.", correct: true }
-            ]
-        },
-        {
-            title: "Deadline Bentrok",
-            scenario: "Atasan kasih tugas baru yang harus selesai jam 5 sore, padahal tugas lama belum kelar.",
-            hint: "Konfirmasi prioritas agar ekspektasi semua pihak terjaga.",
-            options: [
-                { text: "Pak, tugas saya sudah banyak. Jangan ditambah lagi dong, pusing.", correct: false, reason: "Terlalu emosional dan tidak profesional dalam mengelola ekspektasi." },
-                { text: "Siap Pak. Mengingat ada tugas X yang juga selesai jam 5, mana yang perlu saya prioritaskan dulu?", correct: true }
-            ]
-        },
-        {
-            title: "Data Belum Siap",
-            scenario: "Meeting tinggal 5 menit lagi, tapi slide presentasi dari tim lain belum kamu terima.",
-            hint: "Informasikan status terkini sebelum ditanya saat meeting dimulai.",
-            options: [
-                { text: "Update: Slide masih diproses tim X. Akan segera saya tampilkan begitu diterima. Izin mulai dengan agenda lain dulu.", correct: true },
-                { text: "Maaf semuanya, slide-nya belum ada soalnya orang tim X belum kirim ke saya.", correct: false, reason: "Hanya menyalahkan orang lain tanpa memberikan alternatif alur meeting." }
-            ]
-        }
-    ];
+    <!-- FEEDBACK OVERLAY -->
+    <div id="feedback-overlay" class="feedback-overlay">
+        <div class="feedback-content">
+            <h2 style="color: var(--primary); font-size: 2rem; -webkit-text-stroke: 1px #000;">SALAH!</h2>
+            <div id="feedback-reasoning" style="margin: 20px 0; font-weight: bold;">
+                <!-- Reason -->
+            </div>
+            <button class="btn btn-secondary" style="width: 100%;" onclick="closeFeedback()">LANJUT!</button>
+        </div>
+    </div>
 
-    let currentStep = 0;
-    let lives = 3;
-    let isFlipped = false;
-
-    // ═══════════════════════════════════════════
-    //  AUDIO SYSTEM — Fun Gamy BGM + SFX
-    //  BGM: ~128 BPM, C pentatonic melody (xylophone),
-    //  synth bass groove, kick+snare ringan, no chord pad
-    // ═══════════════════════════════════════════
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let bgmNodes = {};
-    let bgmRunning = false;
-
-    // ── Low-level helpers ──
-    function note(freq, t, dur, vol = 0.16) {
-        [freq, freq * 2.01].forEach((f, j) => {
-            const osc = audioCtx.createOscillator();
-            const env = audioCtx.createGain();
-            osc.type = j === 0 ? 'triangle' : 'sine';
-            osc.frequency.value = f;
-            const v = j === 0 ? vol : vol * 0.2;
-            env.gain.setValueAtTime(0, t);
-            env.gain.linearRampToValueAtTime(v, t + 0.012);
-            env.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.88);
-            osc.connect(env); env.connect(bgmNodes.master);
-            osc.start(t); osc.stop(t + dur + 0.05);
-        });
-    }
-    function bassNote(freq, t, dur, vol = 0.2) {
-        const osc = audioCtx.createOscillator();
-        const env = audioCtx.createGain();
-        const filt = audioCtx.createBiquadFilter();
-        osc.type = 'square'; osc.frequency.value = freq;
-        filt.type = 'lowpass'; filt.frequency.value = 300; filt.Q.value = 1.2;
-        env.gain.setValueAtTime(0, t);
-        env.gain.linearRampToValueAtTime(vol, t + 0.02);
-        env.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.7);
-        osc.connect(filt); filt.connect(env); env.connect(bgmNodes.master);
-        osc.start(t); osc.stop(t + dur);
-    }
-    function kick(t) {
-        const osc = audioCtx.createOscillator();
-        const env = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(180, t);
-        osc.frequency.exponentialRampToValueAtTime(38, t + 0.07);
-        env.gain.setValueAtTime(0.4, t);
-        env.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-        osc.connect(env); env.connect(bgmNodes.master);
-        osc.start(t); osc.stop(t + 0.18);
-    }
-    function snare(t) {
-        const sz = Math.floor(audioCtx.sampleRate * 0.1);
-        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < sz; i++) d[i] = (Math.random()*2-1)*(1-i/sz);
-        const src = audioCtx.createBufferSource();
-        const hpf = audioCtx.createBiquadFilter();
-        const env = audioCtx.createGain();
-        src.buffer = buf; hpf.type = 'highpass'; hpf.frequency.value = 2000;
-        env.gain.setValueAtTime(0.1, t);
-        env.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
-        src.connect(hpf); hpf.connect(env); env.connect(bgmNodes.master);
-        src.start(t);
-    }
-    function hihat(t, vol=0.035) {
-        const sz = Math.floor(audioCtx.sampleRate * 0.03);
-        const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < sz; i++) d[i] = (Math.random()*2-1)*(1-i/sz);
-        const src = audioCtx.createBufferSource();
-        const hpf = audioCtx.createBiquadFilter();
-        const env = audioCtx.createGain();
-        src.buffer = buf; hpf.type = 'highpass'; hpf.frequency.value = 9000;
-        env.gain.setValueAtTime(vol, t);
-        env.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-        src.connect(hpf); hpf.connect(env); env.connect(bgmNodes.master);
-        src.start(t);
-    }
-
-    function startBGM() {
-        if (bgmRunning) return;
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        bgmRunning = true;
-
-        const master = audioCtx.createGain();
-        master.gain.value = 0.14;
-        master.connect(audioCtx.destination);
-        bgmNodes.master = master;
-        bgmNodes.intervals = [];
-
-        const BPM = 128, S = 60/BPM, BAR = S*4, LOOP = BAR*8;
-        const loopStart = audioCtx.currentTime + 0.05;
-
-        // C major pentatonic: C4 D4 E4 G4 A4 C5 D5 E5 G5 A5
-        const melSeq = [
-            // Bar 1 — bouncy hook
-            [523.25,0*S,S*.38],[659.25,.5*S,S*.38],[783.99,1*S,S*.45],
-            [659.25,1.5*S,S*.38],[523.25,2*S,S*.38],[587.33,2.5*S,S*.38],
-            [523.25,3*S,S*.7],
-            // Bar 2
-            [440,4*S,S*.35],[392,4.5*S,S*.35],[440,5*S,S*.55],
-            [523.25,5.75*S,S*.3],[587.33,6*S,S*.38],[659.25,6.5*S,S*.38],
-            [523.25,7*S,S*.8],
-            // Bar 3 — rising run
-            [329.63,8*S,S*.28],[392,8.38*S,S*.28],[440,8.75*S,S*.28],
-            [523.25,9*S,S*.28],[587.33,9.38*S,S*.28],[659.25,9.75*S,S*.28],
-            [783.99,10*S,S*.5],[659.25,11*S,S*.38],[523.25,11.5*S,S*.7],
-            // Bar 4 — pocket groove
-            [440,12*S,S*.35],[523.25,12.5*S,S*.35],[587.33,13*S,S*.5],
-            [523.25,13.75*S,S*.22],[440,14*S,S*.35],[392,14.5*S,S*.35],[329.63,15*S,S*.9],
-            // Bar 5 — variation
-            [523.25,16*S,S*.38],[659.25,16.5*S,S*.38],[783.99,17*S,S*.5],
-            [880,17.75*S,S*.22],[783.99,18*S,S*.38],[659.25,18.5*S,S*.38],[523.25,19*S,S*.9],
-            // Bar 6 — playful skip
-            [392,20*S,S*.28],[523.25,20.38*S,S*.28],[392,20.75*S,S*.28],
-            [440,21*S,S*.28],[523.25,21.5*S,S*.5],[587.33,22*S,S*.35],
-            [659.25,22.5*S,S*.35],[523.25,23*S,S*.8],
-            // Bar 7 — build
-            [261.63,24*S,S*.28],[329.63,24.38*S,S*.28],[392,24.75*S,S*.28],
-            [440,25*S,S*.28],[523.25,25.38*S,S*.28],[659.25,25.75*S,S*.28],
-            [783.99,26*S,S*.28],[880,26.38*S,S*.28],[1046.5,26.75*S,S*.35],
-            [880,27*S,S*.35],[659.25,27.5*S,S*.35],[523.25,28*S,S*.9],
-            // Bar 8 — resolve
-            [440,29*S,S*.38],[523.25,29.5*S,S*.38],[659.25,30*S,S*.55],[523.25,31*S,S*1.1],
-        ];
-        const bassSeq = [
-            [65.41,0*S,S*.35],[65.41,1*S,S*.2],[65.41,1.5*S,S*.2],[65.41,2*S,S*.35],[65.41,3*S,S*.35],
-            [55,4*S,S*.35],[55,5*S,S*.2],[55,5.5*S,S*.2],[55,6*S,S*.35],[55,7*S,S*.35],
-            [87.31,8*S,S*.35],[87.31,9*S,S*.2],[87.31,9.5*S,S*.2],[87.31,10*S,S*.35],[87.31,11*S,S*.35],
-            [73.42,12*S,S*.35],[73.42,13*S,S*.2],[73.42,13.5*S,S*.2],[73.42,14*S,S*.35],[73.42,15*S,S*.35],
-            [65.41,16*S,S*.35],[65.41,17*S,S*.35],[65.41,18*S,S*.35],[65.41,19*S,S*.35],
-            [55,20*S,S*.35],[55,21*S,S*.35],[55,22*S,S*.35],[55,23*S,S*.35],
-            [87.31,24*S,S*.35],[87.31,25*S,S*.35],[87.31,26*S,S*.35],[87.31,27*S,S*.35],
-            [65.41,28*S,S*.35],[65.41,29*S,S*.35],[65.41,30*S,S*.35],[65.41,31*S,S*.85],
-        ];
-        // Drums
-        const H = S/2;
-        const drumEvts = [];
-        for (let bar=0; bar<8; bar++) {
-            const t = bar*BAR;
-            for (let st=0; st<8; st++) {
-                const at = t + st*H;
-                drumEvts.push({type:'hihat', t:at, vol: st%2===0?0.04:0.025});
-                if (st===0) drumEvts.push({type:'kick', t:at});
-                if (st===4) drumEvts.push({type:'kick', t:at});
-                if (st===2) drumEvts.push({type:'snare', t:at});
-                if (st===6) drumEvts.push({type:'snare', t:at});
-                if ((bar===3||bar===7) && st===3) drumEvts.push({type:'kick', t:at});
+    <script>
+        const SCENARIOS = [
+            {
+                id: 1,
+                title: "Koneksi Bermasalah",
+                desc: "Internet drop total saat proses input data harian sedang berjalan setengah jalan.",
+                options: [
+                    { label: "A", text: "Diam saja sambil menunggu internet nyala lagi agar tidak berisik.", correct: false, reason: "Diam saja membuat orang lain berasumsi pekerjaan beres. Ini merusak alur kerja tim!" },
+                    { label: "B", text: "Lapor setelah internet nyala: 'Tadi internet mati makanya telat input.'", correct: false, reason: "Ini alasan, bukan info proaktif. Lapor harus sebelum masalah menumpuk." },
+                    { label: "C", text: "Info segera: 'Izin info, internet drop. Proses input terhenti di 50%, saya coba tethering dulu.'", correct: true, reason: "Sempurna! Inilah Courtesy Heads-Up. Anda memberi info status, dampak, dan tindakan Anda." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Antrian Membludak",
+                desc: "Anda melihat antrian di depan meja kerja mulai memanjang dan mungkin akan lewat jam istirahat.",
+                options: [
+                    { label: "A", text: "Info ke antrian: 'Maaf Bapak/Ibu, antrian padat. Mohon bersabar, saya selesaikan satu per satu.'", correct: true, reason: "Mengelola ekspektasi sejak dini mencegah keluhan pelanggan!" },
+                    { label: "B", text: "Bekerja lebih cepat tanpa bicara apapun sampai pusing.", correct: false, reason: "Bekerja keras tanpa komunikasi membuat pelanggan merasa tidak dipedulikan." },
+                    { label: "C", text: "Langsung tutup loket saat jam istirahat tiba tepat waktu.", correct: false, reason: "Sangat tidak profesional dan bisa memicu konflik mendadak." }
+                ]
+            },
+            {
+                id: 3,
+                title: "Data Tidak Sinkron",
+                desc: "Anda menemukan selisih data dari shift sebelumnya yang harus segera dikonfirmasi.",
+                options: [
+                    { label: "A", text: "Perbaiki sendiri sebisa mungkin tanpa lapor siapa-siapa.", correct: false, reason: "Jika salah perbaiki, masalah makin besar. Transparansi adalah kunci keselamatan." },
+                    { label: "B", text: "Heads-up: 'Izin info, ditemukan selisih data shift 1. Saya konfirmasi ke tim terkait dulu ya.'", correct: true, reason: "Hebat! Anda memberi peringatan dini sebelum data salah ini jadi laporan resmi." },
+                    { label: "C", text: "Tunggu sampai ditanya atasan kenapa laporannya belum selesai.", correct: false, reason: "Sangat pasif! Menunggu ditanya berarti Anda gagal mengantisipasi hambatan." }
+                ]
+            },
+            {
+                id: 4,
+                title: "Tugas Ad-hoc Mendadak",
+                desc: "Atasan memberi tugas mendadak yang mendesak, padahal tugas rutin Anda belum beres.",
+                options: [
+                    { label: "A", text: "Langsung kerjakan tugas baru, tugas rutin abaikan saja.", correct: false, reason: "Tugas rutin yang tertinggal tanpa info akan jadi bom waktu nantinya." },
+                    { label: "B", text: "Bilang: 'Maaf Pak, saya sibuk. Tidak bisa kerjakan itu.'", correct: false, reason: "Kurang solutif. Komunikasi proaktif harus mencari jalan tengah." },
+                    { label: "C", text: "Info: 'Siap Pak! Izin info task rutin saya akan tertunda 30 menit karena ini ya.'", correct: true, reason: "Tepat! Anda menerima tugas sambil mengelola ekspektasi waktu tugas lainnya." }
+                ]
+            },
+            {
+                id: 5,
+                title: "Listrik Padam",
+                desc: "Tiba-tiba listrik area kantor padam total, sistem komputer mati.",
+                options: [
+                    { label: "A", text: "Langsung info di grup: 'Listrik area kita padam. Pelayanan terhenti sementara sampai info lanjut.'", correct: true, reason: "Info instan saat keadaan darurat sangat membantu stakeholder mengambil keputusan cepat." },
+                    { label: "B", text: "Keluar ruangan untuk cari udara segar.", correct: false, reason: "Meninggalkan pos tanpa status yang jelas sangat tidak bertanggung jawab." },
+                    { label: "C", text: "Tunggu 10 menit, siapa tahu nyala lagi baru lapor.", correct: false, reason: "Di dunia operasional, 10 menit tanpa kabar adalah keabadian yang berbahaya!" }
+                ]
             }
+        ];
+
+        let currentState = {
+            name: "",
+            nik: "",
+            lives: 3,
+            currentQuestion: 0,
+            isFlipped: false,
+            wrongReasonings: []
+        };
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(freq, type, duration, vol=0.1) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
         }
 
-        function scheduleLoop(startT) {
-            melSeq.forEach(([f,o,d]) => note(f, startT+o, d, 0.16));
-            bassSeq.forEach(([f,o,d]) => bassNote(f, startT+o, d, 0.18));
-            drumEvts.forEach(({type,t,vol}) => {
-                const at = startT+t;
-                if (type==='kick') kick(at);
-                else if (type==='snare') snare(at);
-                else hihat(at, vol);
+        function sfxCorrect() {
+            playSound(523.25, 'sine', 0.1); 
+            setTimeout(() => playSound(659.25, 'sine', 0.1), 100);
+            setTimeout(() => playSound(783.99, 'sine', 0.2), 200);
+        }
+
+        function sfxWrong() {
+            playSound(150, 'sawtooth', 0.4, 0.2);
+        }
+
+        function sfxClick() {
+            playSound(900, 'sine', 0.05, 0.05);
+        }
+
+        let musicPlaying = false;
+        function playBackgroundMusic() {
+            if (musicPlaying) return;
+            musicPlaying = true;
+            
+            const tempo = 128; 
+            const beatInterval = 60 / tempo;
+            
+            function playLayer(freqs, type, volume, rhythm) {
+                let step = 0;
+                function loop() {
+                    const now = audioCtx.currentTime;
+                    const freq = freqs[step % freqs.length];
+                    if (rhythm[step % rhythm.length]) {
+                        const osc = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        osc.type = type;
+                        osc.frequency.setValueAtTime(freq, now);
+                        g.gain.setValueAtTime(volume, now);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + beatInterval * 0.8);
+                        osc.connect(g);
+                        g.connect(audioCtx.destination);
+                        osc.start(now);
+                        osc.stop(now + beatInterval);
+                    }
+                    step++;
+                    setTimeout(loop, beatInterval * 1000);
+                }
+                loop();
+            }
+
+            // Layer 1: Cheerful Lead Melody (C Major Pentatonic)
+            playLayer([523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 392.00], 'square', 0.01, [1, 0, 1, 0, 1, 1, 1, 0]);
+            
+            // Layer 2: Vibing Bassline
+            playLayer([261.63, 196.00, 220.00, 174.61], 'triangle', 0.02, [1, 1, 1, 1]);
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function goToMission() {
+            const nameInput = document.getElementById('user-name').value;
+            const nikInput = document.getElementById('user-nik').value;
+            if (!nameInput || !nikInput) {
+                alert("Mohon isi Nama dan NIK dulu!");
+                return;
+            }
+            currentState.name = nameInput;
+            currentState.nik = nikInput;
+            document.getElementById('display-name').innerText = nameInput;
+            sfxClick();
+            audioCtx.resume().then(() => {
+                playBackgroundMusic();
+            });
+            showScreen('screen-mission');
+        }
+
+        function startGame() {
+            currentState.lives = 3;
+            currentState.currentQuestion = 0;
+            currentState.wrongReasonings = [];
+            updateLivesUI();
+            loadScenario();
+            showScreen('screen-game');
+            sfxClick();
+        }
+
+        function loadScenario() {
+            const scenario = SCENARIOS[currentState.currentQuestion];
+            const card = document.getElementById('main-card');
+            card.classList.remove('flipped');
+            currentState.isFlipped = false;
+            
+            document.getElementById('scenario-title').innerText = scenario.title;
+            document.getElementById('scenario-desc').innerText = scenario.desc;
+            document.getElementById('progress-display').innerText = `PANEL ${currentState.currentQuestion + 1}/${SCENARIOS.length}`;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            scenario.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <div class="option-label">${opt.label}</div>
+                    <div class="option-text">${opt.text}</div>
+                `;
+                btn.onclick = () => handleChoice(index);
+                optionsContainer.appendChild(btn);
             });
         }
 
-        scheduleLoop(loopStart);
-        let loopCount = 1;
-        const id = setInterval(() => {
-            if (!bgmRunning) { clearInterval(id); return; }
-            const next = loopStart + loopCount * LOOP;
-            if (next - audioCtx.currentTime < 2.5) {
-                scheduleLoop(next);
-                loopCount++;
-            }
-        }, 600);
-        bgmNodes.intervals.push(id);
-    }
-
-    function stopBGM() {
-        bgmRunning = false;
-        if (bgmNodes.intervals) bgmNodes.intervals.forEach(id => clearInterval(id));
-        if (bgmNodes.master) {
-            bgmNodes.master.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+        function flipCard() {
+            const card = document.getElementById('main-card');
+            card.classList.toggle('flipped');
+            currentState.isFlipped = !currentState.isFlipped;
+            sfxClick();
         }
-        bgmNodes = {};
-    }
 
-    // SFX helpers (tetap ada untuk interaksi)
-    function playSFX(freq, type, duration, vol = 0.1) {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + duration);
-    }
+        function handleChoice(index) {
+            const scenario = SCENARIOS[currentState.currentQuestion];
+            const choice = scenario.options[index];
 
-    function playWinSound() {
-        // 5-note victory fanfare
-        const fanfare = [[523.25,0],[659.25,120],[783.99,240],[1046.5,360],[1318.5,480]];
-        fanfare.forEach(([f,delay]) => setTimeout(() => playSFX(f,'sine',0.4,0.18), delay));
-    }
-
-    function playFailSound() {
-        // Descending buzz
-        [220,175,140].forEach((f,i) => setTimeout(() => playSFX(f,'sawtooth',0.25,0.18), i*100));
-    }
-
-    // GAME LOGIC
-    function flipCard() {
-        const card = document.getElementById('flashcard');
-        isFlipped = !isFlipped;
-        card.classList.toggle('flipped', isFlipped);
-        playSFX(600, 'triangle', 0.1);
-    }
-
-    function initGame() {
-        const name = document.getElementById('p-name').value;
-        const nik = document.getElementById('p-nik').value;
-        const unit = document.getElementById('p-unit').value;
-        if(!name || !nik || !unit) {
-            playFailSound();
-            alert("Isi semua data kamu dulu ya, Slay!");
-            return;
-        }
-        
-        playSFX(800, 'sine', 0.2);
-        document.getElementById('display-user').innerText = `${name} | ${unit}`;
-        document.getElementById('screen-login').classList.remove('active');
-        document.getElementById('screen-game').classList.add('active');
-        loadStep();
-        startBGM(); // Start BGM setelah user gesture
-    }
-
-    function loadStep() {
-        const data = database[currentStep];
-        const progress = ((currentStep) / database.length) * 100;
-        document.getElementById('progress-bar').style.width = progress + "%";
-        
-        isFlipped = false;
-        document.getElementById('flashcard').classList.remove('flipped');
-        
-        document.getElementById('scenario-title').innerText = data.title;
-        document.getElementById('scenario-msg').innerText = data.scenario;
-        document.getElementById('scenario-hint').innerText = data.hint;
-
-        const box = document.getElementById('options-box');
-        box.innerHTML = '';
-        data.options.sort(() => Math.random() - 0.5).forEach(opt => {
-            const b = document.createElement('button');
-            b.className = 'btn btn-option';
-            b.innerText = opt.text;
-            b.onclick = () => handleChoice(opt);
-            box.appendChild(b);
-        });
-    }
-
-    function handleChoice(opt) {
-        if(opt.correct) {
-            playSFX(1000, 'sine', 0.2);
-            currentStep++;
-            if(currentStep >= database.length) {
-                endGame(true);
+            if (choice.correct) {
+                sfxCorrect();
+                currentState.currentQuestion++;
+                if (currentState.currentQuestion >= SCENARIOS.length) {
+                    winGame();
+                } else {
+                    loadScenario();
+                }
             } else {
-                loadStep();
+                sfxWrong();
+                currentState.lives--;
+                currentState.wrongReasonings.push({
+                    scenario: scenario.title,
+                    reason: choice.reason
+                });
+                updateLivesUI();
+                if (currentState.lives <= 0) {
+                    gameOver();
+                } else {
+                    showFeedback(choice.reason);
+                }
             }
-        } else {
-            lives--;
-            updateHP();
-            playFailSound();
-            showReasoning(opt.reason);
         }
-    }
 
-    function updateHP() {
-        const container = document.getElementById('hp-container');
-        container.innerHTML = '';
-        for(let i=0; i<3; i++) {
-            const s = document.createElement('span');
-            s.className = 'heart';
-            s.innerText = i < lives ? '❤️' : '💀';
-            container.appendChild(s);
+        function updateLivesUI() {
+            document.getElementById('lives-display').innerText = "❤️".repeat(currentState.lives) + "💀".repeat(3 - currentState.lives);
         }
-    }
 
-    function showReasoning(msg) {
-        document.getElementById('reason-text').innerText = msg;
-        document.getElementById('reasoning-modal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('reasoning-modal').style.display = 'none';
-        if(lives <= 0) endGame(false);
-    }
-
-    function endGame(isWin) {
-        stopBGM();
-        document.getElementById('screen-game').classList.remove('active');
-        document.getElementById('screen-result').classList.add('active');
-        document.getElementById('progress-bar').style.width = "100%";
-
-        const header = document.getElementById('result-header');
-        const body = document.getElementById('result-body');
-        const emoji = document.getElementById('final-emoji');
-        const badge = document.getElementById('victory-badge');
-
-        if(isWin) {
-            header.innerText = "YOU'RE A LEGEND!";
-            emoji.innerText = "👑";
-            body.innerHTML = `<p style="text-align: center; font-size: 13px;">Gokil! Kamu berhasil menyelesaikan semua tantangan dengan gaya proaktif. Komunikasi kamu bener-bener 10/10.</p>`;
-            badge.style.display = 'block';
-            playWinSound();
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        } else {
-            header.innerText = "GAME OVER";
-            emoji.innerText = "🤡";
-            body.innerHTML = `<p style="text-align: center; font-size: 13px;">Waduh, sepertinya kamu harus lebih banyak latihan kasih kabar duluan nih. Jangan tunggu ditanya baru jawab ya!</p>`;
-            playFailSound();
+        function showFeedback(reason) {
+            document.getElementById('feedback-reasoning').innerText = reason;
+            document.getElementById('feedback-overlay').style.display = 'flex';
         }
-    }
 
-    // Mulai BGM saat game screen aktif (trigger dari initGame)
-    // BGM dimulai di initGame() setelah user klik — user gesture agar browser izinkan audio
+        function closeFeedback() {
+            document.getElementById('feedback-overlay').style.display = 'none';
+            loadScenario();
+        }
 
-</script>
+        function winGame() {
+            document.getElementById('winner-name').innerText = currentState.name;
+            showScreen('screen-win');
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#f93822', '#00a8e8', '#ffde00']
+            });
+        }
+
+        function gameOver() {
+            const list = document.getElementById('reasoning-list');
+            list.innerHTML = '<p style="font-weight: 900; color: var(--primary);">CATATAN EVALUASI:</p>';
+            currentState.wrongReasonings.forEach(item => {
+                const div = document.createElement('div');
+                div.style.marginBottom = '15px';
+                div.innerHTML = `• <strong>${item.scenario}:</strong> ${item.reason}`;
+                list.appendChild(div);
+            });
+            showScreen('screen-lose');
+        }
+    </script>
 </body>
 </html>
